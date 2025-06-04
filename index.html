@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>پخش‌کننده موسیقی شیک</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/vazir-font@33.0.0/dist/font-face.css" rel="stylesheet">
     <style>
         body {
             background: linear-gradient(to bottom right, #1e3a8a, #4ade80);
@@ -66,13 +67,21 @@
             flex-grow: 1;
             text-align: right;
         }
+        .error-message {
+            color: #ff4444;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
     <div class="player-container">
         <div class="player-header">🎵 پخش‌کننده موسیقی شیک 🎵</div>
-        <audio id="audioPlayer" controls class="audio-player"></audio>
-        <ul id="songList" class="song-list">
+        <div id="loading" class="text-white hidden">در حال بارگذاری...</div>
+        <audio id="audioPlayer" controls class="audio-player" aria-label="پخش‌کننده موسیقی">
+            <source src="" type="audio/mpeg">
+            مرورگر شما از پخش‌کننده پشتیبانی نمی‌کند.
+        </audio>
+        <ul id="songList" class="song-list" role="listbox" aria-label="لیست آهنگ‌ها">
             <li class="song-item">در حال بارگذاری آهنگ‌ها...</li>
         </ul>
     </div>
@@ -80,19 +89,55 @@
     <script>
         const audioPlayer = document.getElementById('audioPlayer');
         const songList = document.getElementById('songList');
+        const loading = document.getElementById('loading');
 
+        const fallbackSongs = [
+            { title: "آهنگ تستی", src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" }
+        ];
+
+        loading.classList.remove('hidden');
         fetch('songs.json')
             .then(response => {
-                if (!response.ok) throw new Error('بارگذاری آهنگ‌ها ناموفق بود');
+                loading.classList.add('hidden');
+                if (!response.ok) throw new Error(`خطا در بارگذاری songs.json: ${response.status}`);
                 return response.json();
             })
             .then(songs => {
-                songList.innerHTML = ''; // پاک کردن پیام بارگذاری
-                if (songs.length === 0) {
-                    songList.innerHTML = '<li class="song-item">هیچ آهنگی یافت نشد.</li>';
-                    return;
+                if (!Array.isArray(songs) || songs.some(song => !song.title || !song.src)) {
+                    throw new Error('فرمت داده‌های آهنگ نامعتبر است');
                 }
+                if (songs.length === 0) {
+                    songs = fallbackSongs;
+                }
+                songList.innerHTML = '';
                 songs.forEach((song, index) => {
+                    const li = document.createElement('li');
+                    li.className = 'song-item';
+                    li.setAttribute('role', 'option');
+                    li.setAttribute('aria-selected', 'false');
+                    li.innerHTML = `<div class="song-number">${index + 1}</div><div class="song-title">${song.title}</div>`;
+                    li.addEventListener('click', () => {
+                        document.querySelectorAll('.song-item').forEach(item => {
+                            item.classList.remove('active');
+                            item.setAttribute('aria-selected', 'false');
+                        });
+                        li.classList.add('active');
+                        li.setAttribute('aria-selected', 'true');
+                        audioPlayer.src = song.src;
+                        audioPlayer.play().catch(err => {
+                            console.error('خطا در پخش:', err);
+                            songList.innerHTML = `<li class="song-item error-message">خطا در پخش آهنگ "${song.title}": ${err.message}</li>`;
+                        });
+                    });
+                    songList.appendChild(li);
+                });
+            })
+            .catch(error => {
+                loading.classList.add('hidden');
+                console.error('خطا:', error);
+                songList.innerHTML = `<li class="song-item error-message">خطا در بارگذاری آهنگ‌ها: ${error.message}</li>`;
+                // بارگذاری آهنگ پیش‌فرض
+                fallbackSongs.forEach((song, index) => {
                     const li = document.createElement('li');
                     li.className = 'song-item';
                     li.innerHTML = `<div class="song-number">${index + 1}</div><div class="song-title">${song.title}</div>`;
@@ -100,14 +145,13 @@
                         document.querySelectorAll('.song-item').forEach(item => item.classList.remove('active'));
                         li.classList.add('active');
                         audioPlayer.src = song.src;
-                        audioPlayer.play().catch(err => console.error('خطا در پخش:', err));
+                        audioPlayer.play().catch(err => {
+                            console.error('خطا در پخش:', err);
+                            songList.innerHTML = `<li class="song-item error-message">خطا در پخش آهنگ "${song.title}": ${err.message}</li>`;
+                        });
                     });
                     songList.appendChild(li);
                 });
-            })
-            .catch(error => {
-                console.error('خطا در بارگذاری آهنگ‌ها:', error);
-                songList.innerHTML = '<li class="song-item">خطا در بارگذاری آهنگ‌ها.</li>';
             });
     </script>
 </body>
