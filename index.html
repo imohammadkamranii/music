@@ -1,171 +1,209 @@
+```html
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>پخش‌کننده موسیقی شیک</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <title>پخش‌کننده موسیقی </title>
+    <link href="https://fonts.googleapis.com/css2?family=Lato&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/vazir-font@33.0.0/dist/font-face.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <style>
-        body {
-            background: linear-gradient(to bottom right, #1e3a8a, #4ade80);
-            font-family: 'Vazir', 'Poppins', sans-serif;
-            color: white;
-            padding: 20px;
+        * {
             margin: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Vazir', 'Lato', sans-serif;
+            background-color: #7D30FA;
             min-height: 100vh;
+            display: grid;
+            place-items: center;
         }
         .music-container {
-            max-width: 600px;
             width: 100%;
-            padding: 30px;
-            background: rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
-            text-align: center;
+            max-width: 400px;
+            padding: 1.3rem;
         }
         .music-body {
+            box-shadow: 0 20px 50px #3d11839f;
+            background: #fff;
+            padding: 1.3rem;
+            border-radius: 1.5rem;
             position: relative;
+            overflow: hidden;
+        }
+        .btn {
+            outline: none;
+            border: 0;
+            background: #eee6fc;
+            font-size: 0.9rem;
+            color: #7D30FA;
+            height: 2.188rem;
+            width: 2.188rem;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+        .btn:hover {
+            color: #5717be;
         }
         .top-icons {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 20px;
+            align-items: center;
         }
-        .music-img img {
-            width: 200px;
-            height: 200px;
-            object-fit: cover;
-            border-radius: 15px;
-            margin: 0 auto 20px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        .volume {
+            z-index: 5;
         }
-        .music-info h2 {
-            font-size: 1.5rem;
-            margin-bottom: 20px;
+        .layer {
+            z-index: 4;
+            position: absolute;
+            background: #fff;
+            border: 2px solid #eee6fc;
+            height: 2.188rem;
+            width: 17.5rem;
+            left: 0;
+            right: 0;
+            margin: auto;
+            top: 3.5rem;
+            border-radius: 1.5rem;
+            display: grid;
+            place-items: center;
+            visibility: hidden;
         }
-        .music-progress {
-            margin: 20px 0;
+        .layer.hide {
+            visibility: visible;
         }
-        .progress-bar {
-            background: rgba(0, 0, 0, 0.2);
-            border-radius: 5px;
-            height: 5px;
+        .volume-slider, .progress-bar {
             position: relative;
+            width: 80%;
+            height: 0.2rem;
+            background: #eee6fc;
         }
-        .progress-line {
-            background: #4ade80;
-            height: 100%;
+        .volume-slider .bar, .progress-bar .progress-line {
+            display: block;
             width: 0;
-            border-radius: 5px;
-            transition: width 0.1s linear;
+            height: inherit;
+            background-color: #7D30FA;
         }
-        .progress {
+        .volume-slider .bar {
+            width: 100%;
+        }
+        .volume-slider .volumerange, .progress-bar .progress {
             width: 100%;
             -webkit-appearance: none;
-            height: 5px;
+            height: inherit;
             background: transparent;
+            outline: none;
             position: absolute;
             top: 0;
             left: 0;
             cursor: pointer;
         }
-        .progress::-webkit-slider-thumb {
+        .volume-slider .volumerange::-webkit-slider-thumb, .progress-bar .progress::-webkit-slider-thumb {
             -webkit-appearance: none;
-            width: 12px;
-            height: 12px;
-            background: #fff;
+            height: 0.7rem;
+            width: 0.7rem;
+            background-color: #7D30FA;
             border-radius: 50%;
             cursor: pointer;
         }
+        .music-img {
+            margin-top: 1rem;
+            width: 100%;
+            height: 15rem;
+            overflow: hidden;
+            border-radius: 1.4rem;
+        }
+        .music-img img {
+            object-fit: cover;
+            height: 100%;
+            width: 100%;
+        }
+        .music-info {
+            text-align: center;
+        }
+        .music-info h2 {
+            font-size: 1rem;
+            margin-top: 1rem;
+            letter-spacing: 0.02rem;
+            color: #7D30FA;
+        }
+        .music-progress {
+            margin-top: 1rem;
+        }
+        .progress-bar {
+            background: #ebdfff;
+            height: 0.2rem;
+            width: 100%;
+            margin-bottom: 0.4rem;
+            position: relative;
+            cursor: pointer;
+        }
+        .progress-line {
+            background: #7D30FA;
+            width: 0;
+            height: 100%;
+        }
         .duration {
             display: flex;
+            color: #7D30FA;
             justify-content: space-between;
-            font-size: 0.9rem;
-            margin-top: 5px;
+            font-size: 0.7rem;
         }
         .music-controls {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            margin-top: 1rem;
         }
-        .main-controls {
-            display: flex;
-            gap: 20px;
-        }
-        .btn {
-            background: none;
-            border: none;
-            color: white;
-            font-size: 1.2rem;
+        .prevbtn, .nextbtn, .playpause {
+            border: 0;
+            outline: 0;
+            font-size: 2rem;
+            background: #fff;
+            color: #7D30FA;
             cursor: pointer;
-            transition: color 0.3s;
         }
-        .btn:hover {
-            color: #4ade80;
+        .prevbtn:hover, .nextbtn:hover {
+            color: #5717be;
         }
         .playpause {
-            background: #4ade80;
+            font-size: 1.7rem;
+            background: #7D30FA;
+            height: 4.5rem;
+            width: 4.5rem;
+            color: #fff;
             border-radius: 50%;
-            padding: 15px;
-            width: 50px;
-            height: 50px;
+            display: grid;
+            place-items: center;
+        }
+        .fa-play {
+            position: relative;
+            left: 0.1rem;
+        }
+        .main-controls {
+            border-radius: 2rem;
+            padding: 0.5rem 1rem;
             display: flex;
-            align-items: center;
-            justify-content: center;
+            justify-content: space-between;
+            gap: 1.3rem;
         }
-        .playpause:hover {
-            background: #22c55e;
-        }
-        .volume-slider {
-            position: absolute;
-            top: 50px;
-            left: 20px;
-            width: 120px;
-            background: rgba(0, 0, 0, 0.3);
-            padding: 10px;
-            border-radius: 10px;
-            display: none;
-        }
-        .volume-slider.show {
-            display: block;
-        }
-        .volumerange {
-            width: 100%;
-            -webkit-appearance: none;
-            background: transparent;
-            cursor: pointer;
-        }
-        .volumerange::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            width: 10px;
-            height: 10px;
-            background: #fff;
-            border-radius: 50%;
-        }
-        .bar {
-            background: #4ade80;
-            height: 4px;
-            border-radius: 5px;
-            width: 100%;
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
+        .color {
+            color: #fc00b0 !important;
         }
         .songs-list {
             position: fixed;
+            width: 100%;
+            max-width: 400px;
+            height: 100%;
+            background: #fff;
             top: 0;
             right: -100%;
-            width: 300px;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            backdrop-filter: blur(10px);
-            padding: 20px;
+            z-index: 10;
+            padding: 1.3rem;
             transition: right 0.3s ease;
             overflow-y: auto;
         }
@@ -173,14 +211,17 @@
             right: 0;
         }
         .list-close {
+            background: none;
+            font-size: 1.1rem;
+            color: #ff1b1bf3;
             position: absolute;
-            top: 10px;
-            left: 10px;
+            top: 0.4rem;
+            right: 0.4rem;
         }
         .song-item {
             padding: 10px;
             margin: 5px 0;
-            background: rgba(255, 255, 255, 0.1);
+            background: #eee6fc;
             border-radius: 5px;
             cursor: pointer;
             transition: background 0.3s;
@@ -188,10 +229,11 @@
             align-items: center;
         }
         .song-item:hover {
-            background: rgba(255, 255, 255, 0.2);
+            background: #d1c4e9;
         }
         .song-item.active {
-            background: rgba(74, 222, 128, 0.4);
+            background: #7D30FA;
+            color: #fff;
         }
         .song-number {
             width: 30px;
@@ -203,21 +245,21 @@
             text-align: right;
         }
         .error-message {
-            color: #ff4444;
+            color: #ff1b1bf3;
             font-weight: bold;
             padding: 10px;
-        }
-        .color {
-            color: #4ade80 !important;
+            text-align: center;
         }
     </style>
 </head>
 <body>
     <div class="music-container">
         <div class="music-body">
-            <div class="layer volume-slider">
-                <div class="bar"></div>
-                <input type="range" min="0.01" max="1" value="1" step="0.01" class="volumerange" id="volumeRange"/>
+            <div class="layer">
+                <div class="volume-slider">
+                    <span class="bar"></span>
+                    <input type="range" min="0.01" max="1" value="1" step="0.01" class="volumerange" id="volumeRange"/>
+                </div>
             </div>
             <div class="top-icons">
                 <button class="volume btn" id="volume">
@@ -228,7 +270,7 @@
                 </button>
             </div>
             <div class="music-img">
-                <img src="https://images.genius.com/ee202c6f724ffd4cf61bd01a205eeb47.1000x1000x1.jpg" alt="song-images" id="img">
+                <img src="https://via.placeholder.com/150" alt="song-images" id="img">
             </div>
             <div class="music-info">
                 <h2 id="title">در حال بارگذاری...</h2>
@@ -446,10 +488,10 @@
 
         // تابع برای کنترل ولوم
         function volumeBar() {
-            layer.classList.toggle('show');
+            layer.classList.toggle('hide');
             setTimeout(() => {
-                if (layer.classList.contains("show")) {
-                    layer.classList.remove("show");
+                if (layer.classList.contains("hide")) {
+                    layer.classList.remove("hide");
                 }
             }, 5000);
         }
@@ -499,3 +541,5 @@
     </script>
 </body>
 </html>
+```
+
