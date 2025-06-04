@@ -1,158 +1,146 @@
-<!DOCTYPE html>
-<html lang="fa" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>پخش‌کننده موسیقی </title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/vazir-font@33.0.0/dist/font-face.css" rel="stylesheet">
-    <style>
-        body {
-            background: linear-gradient(to bottom right, #1e3a8a, #4ade80);
-            font-family: 'Vazir', 'Poppins', sans-serif;
-            color: white;
-            padding: 20px;
+import React, { useCallback, useEffect, useRef, useState } from "https://esm.sh/react";
+import { createRoot } from "https://esm.sh/react-dom/client";
+
+function App() {
+  const [playerTrackId, setPlayerTrackId] = useState(0);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [tracks, setTracks] = useState([]);
+  const [seekerPosition, setSeekerPosition] = useState(0);
+  const audioRef = useRef(null);
+  const tickerRef = useRef(null);
+
+  useEffect(() => {
+    // Load tracks from the JSON file
+    fetch("/path/to/song.json")
+      .then((response) => response.json())
+      .then((data) => setTracks(data))
+      .catch((error) => console.error("Error loading tracks:", error));
+  }, []);
+
+  const switchTrack = useCallback((offset, relative = false) => {
+    setPlayerTrackId((id) => ((relative ? id + offset : offset) + tracks.length) % tracks.length);
+  }, [tracks.length]);
+
+  const switchToNextTrack = useCallback(() => switchTrack(1, true), [switchTrack]);
+  const switchToPreviousTrack = useCallback(() => switchTrack(-1, true), [switchTrack]);
+
+  useEffect(() => {
+    if (!tracks.length) return;
+    const currentTrack = tracks[playerTrackId];
+    if (audioRef.current) {
+      audioRef.current.pause();
+    }
+    audioRef.current = new Audio(currentTrack.url);
+    audioRef.current.preload = "auto";
+    if (isPlaying) {
+      audioRef.current.play();
+    }
+  }, [playerTrackId, tracks, isPlaying]);
+
+  const handlePlayButtonClick = (e) => {
+    e.preventDefault();
+    if (isPlaying) {
+      audioRef.current.pause();
+      clearInterval(tickerRef.current);
+    } else {
+      audioRef.current.play();
+      tickerRef.current = setInterval(() => {
+        if (audioRef.current.currentTime === audioRef.current.duration) {
+          audioRef.current.currentTime = 0;
+          clearInterval(tickerRef.current);
+          setIsPlaying(false);
         }
-        .player-container {
-            max-width: 600px;
-            margin: auto;
-            padding: 30px;
-            background: rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
-            text-align: center;
-        }
-        .player-header {
-            font-size: 2rem;
-            font-weight: bold;
-            margin-bottom: 1rem;
-        }
-        .audio-player {
-            width: 100%;
-            margin: 15px 0;
-            outline: none;
-        }
-        .song-list {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-        .song-item {
-            padding: 10px 15px;
-            margin: 8px 0;
-            background: rgba(0, 0, 0, 0.1);
-            border-radius: 10px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-        }
-        .song-item:hover {
-            background: rgba(0, 0, 0, 0.2);
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-        }
-        .song-item.active {
-            background: rgba(74, 222, 128, 0.4);
-            color: #fff;
-        }
-        .song-number {
-            width: 30px;
-            text-align: center;
-            font-weight: bold;
-            margin-left: 10px;
-        }
-        .song-title {
-            flex-grow: 1;
-            text-align: right;
-        }
-        .error-message {
-            color: #ff4444;
-            font-weight: bold;
-        }
-    </style>
-</head>
-<body>
-    <div class="player-container">
-        <div class="player-header">🎵 پخش‌کننده موسیقی شیک 🎵</div>
-        <div id="loading" class="text-white hidden">در حال بارگذاری...</div>
-        <audio id="audioPlayer" controls class="audio-player" aria-label="پخش‌کننده موسیقی">
-            <source src="" type="audio/mpeg">
-            مرورگر شما از پخش‌کننده پشتیبانی نمی‌کند.
-        </audio>
-        <ul id="songList" class="song-list" role="listbox" aria-label="لیست آهنگ‌ها">
-            <li class="song-item">در حال بارگذاری آهنگ‌ها...</li>
-        </ul>
+        setSeekerPosition(audioRef.current.currentTime);
+      }, 1000);
+    }
+    setIsPlaying((s) => !s);
+  };
+
+  const onSeek = useCallback((time) => {
+    audioRef.current.currentTime = time;
+    setSeekerPosition(time);
+  }, []);
+
+  if (!tracks.length) {
+    return <div>Loading...</div>;
+  }
+
+  const playerTrack = tracks[playerTrackId];
+
+  return (
+    <main className="player">
+      <div className="album-art-container">
+        <img
+          className="album-art"
+          src={playerTrack.albumArt}
+          alt="album art"
+        ></img>
+      </div>
+      <Marquee>
+        <div className="track-title">{playerTrack.title}</div>
+      </Marquee>
+      <Marquee>
+        <div className="authors">{playerTrack.authors.join(", ")}</div>
+      </Marquee>
+      <div className="seeker-container">
+        <div className="seeker-timestamps">
+          <span>{formatTime(seekerPosition)}</span>
+          <span>{formatTime(audioRef.current?.duration)}</span>
+        </div>
+        <Seeker
+          current={seekerPosition}
+          total={audioRef.current?.duration}
+          onSeek={onSeek}
+        />
+      </div>
+      <div className="player-buttons">
+        <button onClick={switchToPreviousTrack}>⏴</button>
+        <button className="play-button" onClick={handlePlayButtonClick}>
+          <PlayButton isPlaying={isPlaying} />
+        </button>
+        <button onClick={switchToNextTrack}>⏵</button>
+      </div>
+    </main>
+  );
+}
+
+function PlayButton({ isPlaying }) {
+  const path = isPlaying
+    ? "M10,10 L10,90 L40,90 L40,10 M90,10 L90,90 L60,90 L60,10 Z"
+    : "M10,10 L90,50 L10,90 Z";
+  return (
+    <svg viewBox="0 0 100 100">
+      <path d={path} />
+    </svg>
+  );
+}
+
+function Seeker({ current, total, onSeek }) {
+  return (
+    <input
+      type="range"
+      min={0}
+      max={total}
+      value={isNaN(current) ? 0 : current}
+      onChange={(e) => onSeek(e.target.value)}
+    />
+  );
+}
+
+function Marquee({ children }) {
+  return (
+    <div className="marquee-container">
+      <div className="marquee-content">{children}</div>
     </div>
+  );
+}
 
-    <script>
-        const audioPlayer = document.getElementById('audioPlayer');
-        const songList = document.getElementById('songList');
-        const loading = document.getElementById('loading');
+function formatTime(t) {
+  if (isNaN(t)) {
+    t = 0;
+  }
+  return `${parseInt(t / 60)}:${String(parseInt(t % 60)).padStart(2, 0)}`;
+}
 
-        const fallbackSongs = [
-            { title: "آهنگ تستی", src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" }
-        ];
-
-        loading.classList.remove('hidden');
-        fetch('songs.json')
-            .then(response => {
-                loading.classList.add('hidden');
-                if (!response.ok) throw new Error(`خطا در بارگذاری songs.json: ${response.status}`);
-                return response.json();
-            })
-            .then(songs => {
-                if (!Array.isArray(songs) || songs.some(song => !song.title || !song.src)) {
-                    throw new Error('فرمت داده‌های آهنگ نامعتبر است');
-                }
-                if (songs.length === 0) {
-                    songs = fallbackSongs;
-                }
-                songList.innerHTML = '';
-                songs.forEach((song, index) => {
-                    const li = document.createElement('li');
-                    li.className = 'song-item';
-                    li.setAttribute('role', 'option');
-                    li.setAttribute('aria-selected', 'false');
-                    li.innerHTML = `<div class="song-number">${index + 1}</div><div class="song-title">${song.title}</div>`;
-                    li.addEventListener('click', () => {
-                        document.querySelectorAll('.song-item').forEach(item => {
-                            item.classList.remove('active');
-                            item.setAttribute('aria-selected', 'false');
-                        });
-                        li.classList.add('active');
-                        li.setAttribute('aria-selected', 'true');
-                        audioPlayer.src = song.src;
-                        audioPlayer.play().catch(err => {
-                            console.error('خطا در پخش:', err);
-                            songList.innerHTML = `<li class="song-item error-message">خطا در پخش آهنگ "${song.title}": ${err.message}</li>`;
-                        });
-                    });
-                    songList.appendChild(li);
-                });
-            })
-            .catch(error => {
-                loading.classList.add('hidden');
-                console.error('خطا:', error);
-                songList.innerHTML = `<li class="song-item error-message">خطا در بارگذاری آهنگ‌ها: ${error.message}</li>`;
-                // بارگذاری آهنگ پیش‌فرض
-                fallbackSongs.forEach((song, index) => {
-                    const li = document.createElement('li');
-                    li.className = 'song-item';
-                    li.innerHTML = `<div class="song-number">${index + 1}</div><div class="song-title">${song.title}</div>`;
-                    li.addEventListener('click', () => {
-                        document.querySelectorAll('.song-item').forEach(item => item.classList.remove('active'));
-                        li.classList.add('active');
-                        audioPlayer.src = song.src;
-                        audioPlayer.play().catch(err => {
-                            console.error('خطا در پخش:', err);
-                            songList.innerHTML = `<li class="song-item error-message">خطا در پخش آهنگ "${song.title}": ${err.message}</li>`;
-                        });
-                    });
-                    songList.appendChild(li);
-                });
-            });
-    </script>
-</body>
-</html>
+const root = createRoot(document.getElementById("root"));
+root.render(<App />);
