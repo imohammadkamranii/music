@@ -1,138 +1,63 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Music Player</title>
-    <style>
-        /* CSS Styles */
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f4f4f9;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
-        #app {
-            width: 300px;
-            background: white;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
-            overflow: hidden;
-        }
-        .header {
-            padding: 16px;
-            text-align: center;
-            background-color: #6200ea;
-            color: white;
-        }
-        .track {
-            padding: 16px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        .track img {
-            width: 100%;
-            border-radius: 8px;
-        }
-        .track h3, .track p {
-            margin: 8px 0;
-        }
-        .controls {
-            display: flex;
-            justify-content: space-around;
-            padding: 16px;
-        }
-        button {
-            padding: 8px 16px;
-            background-color: #6200ea;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-        button:disabled {
-            background-color: #ccc;
-        }
-    </style>
-</head>
 <body>
-    <div id="app">
-        <div class="header">
-            <h1>Music Player</h1>
-        </div>
-        <div class="track">
-            <img id="album-art" src="" alt="Album Art">
-            <h3 id="title">Title</h3>
-            <p id="authors">Authors</p>
-        </div>
-        <audio id="audio" controls style="width: 100%; margin: 0 16px;"></audio>
-        <div class="controls">
-            <button id="prev" disabled>Previous</button>
-            <button id="next">Next</button>
+    <div class="music-container">
+
+        <div class="music-body">
+            <div class="layer">
+                <div class="volume-slider">
+                <span class="bar"></span>
+                <input type='range' min='0.01' max='1' value='1' step='0.01' class="volumerange"/>
+                </div>
+            </div>
+            <div class="top-icons">
+                <button class="volume btn" id="volume">
+                    <i id="volumeicon" class="fas fa-volume-up"></i>
+                </button>
+                <button class="list btn" id="list">
+                    <i class="fas fa-list"></i>
+                </button>
+            </div>
+            <div class="music-img">
+                <img src="https://images.genius.com/ee202c6f724ffd4cf61bd01a205eeb47.1000x1000x1.jpg" alt="song-images" id="img">
+            </div>
+            <div class="music-info">
+                <h2 id="title">Yıldız Tozu</h2>
+            </div>
+            <audio src="https://raw.githubusercontent.com/ustabasiibrahim/music-player/master/assets/music/1.mp3" id="audio"></audio>
+            <div class="music-progress">
+                <div class="progress-bar">
+                    <span class="progress-line"></span>
+                    <input type='range' min='0' max='100' value='0' class="progress" id="progress"/>
+                </div>
+                <div class="duration">
+                    <span class="current-time">00:00</span>
+                    <span class="duration-time">00:00</span>
+                </div>
+            </div>
+            <div class="music-controls">
+                <button class="repeat btn" id="repeat">
+                    <i class="fas fa-redo-alt"></i>
+                </button>
+                <div class="main-controls">
+                    <button class="prevbtn" id="prevbtn">
+                        <i class="fas fa-backward"></i>
+                    </button>
+                    <button class="playpause" id="playpause">
+                        <i id="playpause-btn"class="fas fa-play"></i>
+                    </button>
+                    <button class="nextbtn" id="nextbtn">
+                        <i class="fas fa-forward"></i>
+                    </button>
+                </div>
+                <button class="like btn" id="like">
+                    <i id="likeicon" class="far fa-heart"></i>
+                </button>
+            </div>
+            <div class="songs-list" id="songs-list">
+                <button class="list-close btn" id="listclose">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
         </div>
     </div>
-    <script>
-        // JavaScript Code
-        const tracks = [
-            {
-                authors: ["Antonio Vivaldi", "Leonard Bernstein", "The New York Philharmonic Orchestra", "John Corigliano"],
-                title: "Summer: III - Presto",
-                albumArt: "https://i.discogs.com/xW2tKm90ICMH8qnSvwhItM_gCDutDzfjMQ4C4dCyWII/rs:fit/g:sm/q:40/h:300/w:300/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTEzMTA1/MDY5LTE1NDgxMzk4/OTAtMzg3Mi5qcGVn.jpeg",
-                url: "https://archive.org/download/lp_the-four-seasons_antonio-vivaldi-leonard-bernstein-the-new/disc1/01.06.%20Summer%3A%20III%20-%20Presto.mp3"
-            },
-            {
-                authors: ["Johann Sebastian Bach", "Universal Music", "John Corigliano"],
-                title: "Toccata And Fugue In D Minor, Bwv 565",
-                albumArt: "https://ia802303.us.archive.org/8/items/50_best_loved_works_by_bach/50%20Best%20Loved%20Works%20by%20BACH.jpg",
-                url: "https://archive.org/download/50_best_loved_works_by_bach/001%20Toccata%20And%20Fugue%20In%20D%20Minor%2C%20Bwv%20565%20Excerpt.mp3"
-            },
-            {
-                authors: ["George Frederic Handel"],
-                title: "Passacaglia",
-                albumArt: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/George_Frideric_Handel_by_Balthasar_Denner.jpg/220px-George_Frideric_Handel_by_Balthasar_Denner.jpg",
-                url: "https://archive.org/download/george-frideric-handel-passacaglia-from-suite-no-7-in-g-minor/George%20Frideric%20Handel%20%E2%80%94%20Passacaglia%20From%20Suite%20No%207%20In%20G%20Minor.mp3"
-            }
-        ];
-
-        let currentTrackIndex = 0;
-
-        const albumArt = document.getElementById("album-art");
-        const title = document.getElementById("title");
-        const authors = document.getElementById("authors");
-        const audio = document.getElementById("audio");
-        const prevButton = document.getElementById("prev");
-        const nextButton = document.getElementById("next");
-
-        function updateTrack() {
-            const track = tracks[currentTrackIndex];
-            albumArt.src = track.albumArt;
-            title.textContent = track.title;
-            authors.textContent = track.authors.join(", ");
-            audio.src = track.url;
-            prevButton.disabled = currentTrackIndex === 0;
-            nextButton.disabled = currentTrackIndex === tracks.length - 1;
-        }
-
-        prevButton.addEventListener("click", () => {
-            if (currentTrackIndex > 0) {
-                currentTrackIndex--;
-                updateTrack();
-            }
-        });
-
-        nextButton.addEventListener("click", () => {
-            if (currentTrackIndex < tracks.length - 1) {
-                currentTrackIndex++;
-                updateTrack();
-            }
-        });
-
-        updateTrack();
-    </script>
+    <script src="script.js"></script>
 </body>
-</html>
