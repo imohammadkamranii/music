@@ -74,36 +74,48 @@
         const audioPlayer = document.getElementById('audioPlayer');
         const songList = document.getElementById('songList');
 
-        // Example song list, replace with your songs folder
-        const songs = [
-            "songs/song1.mp3",
-            "songs/song2.mp3",
-            "songs/song3.mp3"
-        ];
+        // Fetch all .mp3 files dynamically from the songs directory
+        fetch('songs/')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.text();
+            })
+            .then(data => {
+                const parser = new DOMParser();
+                const htmlDoc = parser.parseFromString(data, 'text/html');
+                const links = htmlDoc.querySelectorAll('a[href$=".mp3"]');
 
-        songs.forEach((songSrc, index) => {
-            const songName = songSrc.split('/').pop().replace('.mp3', '');
-            const li = document.createElement('li');
-            li.className = 'song-item';
+                links.forEach((link, index) => {
+                    const songSrc = `songs/${link.getAttribute('href')}`;
+                    const songName = link.getAttribute('href').replace('.mp3', '');
 
-            const number = document.createElement('div');
-            number.className = 'song-number';
-            number.textContent = index + 1;
+                    const li = document.createElement('li');
+                    li.className = 'song-item';
 
-            const title = document.createElement('div');
-            title.className = 'song-title';
-            title.textContent = songName;
+                    const number = document.createElement('div');
+                    number.className = 'song-number';
+                    number.textContent = index + 1;
 
-            li.appendChild(number);
-            li.appendChild(title);
+                    const title = document.createElement('div');
+                    title.className = 'song-title';
+                    title.textContent = songName;
 
-            li.addEventListener('click', () => {
-                audioPlayer.src = songSrc;
-                audioPlayer.play();
+                    li.appendChild(number);
+                    li.appendChild(title);
+
+                    li.addEventListener('click', () => {
+                        audioPlayer.src = songSrc;
+                        audioPlayer.play();
+                    });
+
+                    songList.appendChild(li);
+                });
+            })
+            .catch(error => {
+                console.error('Error fetching song list:', error);
             });
-
-            songList.appendChild(li);
-        });
     </script>
 </body>
 </html>
