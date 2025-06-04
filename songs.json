@@ -1,6 +1,9 @@
-[
-    { "title": "حصین", "src": "songs/Ho3ein - Sarpaam.mp3" },
-    
-    { "title": "2ja", "src": "https://dlrapfa.ir/Mp3/2021/05/25/Ho3ein/Ho3ein - 2Ja.mp3" }
 
+[
+    {
+        "path": "https://dlrapfa.ir/Mp3/2021/05/25/Ho3ein/Ho3ein - 2Ja.mp3",
+        "displayName": "احصین",
+        "artist": "2ja",
+        "cover": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/Ho3ein_in_2020.jpg/500px-Ho3ein_in_2020.jpg"
+    }
 ]
