@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Music Player</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(to bottom, #1e3a8a, #3b82f6);
+            color: white;
+            font-family: 'Arial', sans-serif;
+        }
+        .player-container {
+            max-width: 400px;
+            margin: auto;
+            padding: 20px;
+            border-radius: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+        .progress-bar {
+            background: #9ca3af;
+            border-radius: 5px;
+            height: 10px;
+            overflow: hidden;
+        }
+        .progress {
+            height: 100%;
+            background: #3b82f6;
+        }
+    </style>
+</head>
+<body>
+    <div class="player-container text-center">
+        <h1 class="text-2xl font-bold mb-4">Music Player</h1>
+        <audio id="audioPlayer" src="your-audio-file.mp3"></audio>
+        <p id="currentSong" class="text-lg mb-4">No song playing</p>
+        <div class="flex justify-center items-center gap-4 mb-4">
+            <button id="prevBtn" class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded">⏮ Prev</button>
+            <button id="playPauseBtn" class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded">▶ Play</button>
+            <button id="nextBtn" class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded">⏭ Next</button>
+        </div>
+        <div class="progress-bar w-full mb-4">
+            <div id="progress" class="progress" style="width: 0%;"></div>
+        </div>
+        <input type="file" id="fileInput" class="hidden" accept="audio/*" multiple>
+        <button id="uploadBtn" class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded">Upload Songs</button>
+    </div>
+
+    <script>
+        const audioPlayer = document.getElementById('audioPlayer');
+        const playPauseBtn = document.getElementById('playPauseBtn');
+        const progress = document.getElementById('progress');
+        const currentSong = document.getElementById('currentSong');
+        const uploadBtn = document.getElementById('uploadBtn');
+        const fileInput = document.getElementById('fileInput');
+
+        let isPlaying = false;
+        let songIndex = 0;
+        let songs = [];
+
+        function playSong() {
+            audioPlayer.play();
+            isPlaying = true;
+            playPauseBtn.textContent = '⏸ Pause';
+        }
+
+        function pauseSong() {
+            audioPlayer.pause();
+            isPlaying = false;
+            playPauseBtn.textContent = '▶ Play';
+        }
+
+        playPauseBtn.addEventListener('click', () => {
+            if (isPlaying) {
+                pauseSong();
+            } else {
+                playSong();
+            }
+        });
+
+        audioPlayer.addEventListener('timeupdate', () => {
+            const progressPercent = (audioPlayer.currentTime / audioPlayer.duration) * 100;
+            progress.style.width = `${progressPercent}%`;
+        });
+
+        audioPlayer.addEventListener('ended', () => {
+            nextSong();
+        });
+
+        function nextSong() {
+            songIndex = (songIndex + 1) % songs.length;
+            loadSong(songs[songIndex]);
+            playSong();
+        }
+
+        function prevSong() {
+            songIndex = (songIndex - 1 + songs.length) % songs.length;
+            loadSong(songs[songIndex]);
+            playSong();
+        }
+
+        function loadSong(song) {
+            audioPlayer.src = song;
+            currentSong.textContent = `Playing: ${song.split('/').pop()}`;
+        }
+
+        document.getElementById('nextBtn').addEventListener('click', nextSong);
+        document.getElementById('prevBtn').addEventListener('click', prevSong);
+
+        uploadBtn.addEventListener('click', () => fileInput.click());
+
+        fileInput.addEventListener('change', (e) => {
+            songs = Array.from(e.target.files).map(file => URL.createObjectURL(file));
+            if (songs.length > 0) {
+                songIndex = 0;
+                loadSong(songs[songIndex]);
+            }
+        });
+    </script>
+</body>
+</html>
