@@ -1,14 +1,14 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fa" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Custom Music Player</title>
+    <title>پخش‌کننده موسیقی شیک</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <style>
         body {
             background: linear-gradient(to bottom right, #1e3a8a, #4ade80);
-            font-family: 'Poppins', sans-serif;
+            font-family: 'Vazir', 'Poppins', sans-serif;
             color: white;
             padding: 20px;
         }
@@ -52,69 +52,62 @@
             transform: translateY(-3px);
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
         }
+        .song-item.active {
+            background: rgba(74, 222, 128, 0.4);
+            color: #fff;
+        }
         .song-number {
             width: 30px;
             text-align: center;
             font-weight: bold;
-            margin-right: 10px;
+            margin-left: 10px;
         }
         .song-title {
             flex-grow: 1;
+            text-align: right;
         }
     </style>
 </head>
 <body>
     <div class="player-container">
-        <div class="player-header">🎵 My Stylish Music Player 🎵</div>
+        <div class="player-header">🎵 پخش‌کننده موسیقی شیک 🎵</div>
         <audio id="audioPlayer" controls class="audio-player"></audio>
-        <ul id="songList" class="song-list"></ul>
+        <ul id="songList" class="song-list">
+            <li class="song-item">در حال بارگذاری آهنگ‌ها...</li>
+        </ul>
     </div>
 
     <script>
         const audioPlayer = document.getElementById('audioPlayer');
         const songList = document.getElementById('songList');
 
-        // Fetch all .mp3 files dynamically from the songs directory
-        fetch('songs/')
+        fetch('songs.json')
             .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.text();
+                if (!response.ok) throw new Error('بارگذاری آهنگ‌ها ناموفق بود');
+                return response.json();
             })
-            .then(data => {
-                const parser = new DOMParser();
-                const htmlDoc = parser.parseFromString(data, 'text/html');
-                const links = htmlDoc.querySelectorAll('a[href$=".mp3"]');
-
-                links.forEach((link, index) => {
-                    const songSrc = `songs/${link.getAttribute('href')}`;
-                    const songName = link.getAttribute('href').replace('.mp3', '');
-
+            .then(songs => {
+                songList.innerHTML = ''; // پاک کردن پیام بارگذاری
+                if (songs.length === 0) {
+                    songList.innerHTML = '<li class="song-item">هیچ آهنگی یافت نشد.</li>';
+                    return;
+                }
+                songs.forEach((song, index) => {
                     const li = document.createElement('li');
                     li.className = 'song-item';
-
-                    const number = document.createElement('div');
-                    number.className = 'song-number';
-                    number.textContent = index + 1;
-
-                    const title = document.createElement('div');
-                    title.className = 'song-title';
-                    title.textContent = songName;
-
-                    li.appendChild(number);
-                    li.appendChild(title);
-
+                    li.innerHTML = `<div class="song-number">${index + 1}</div><div class="song-title">${song.title}</div>`;
                     li.addEventListener('click', () => {
-                        audioPlayer.src = songSrc;
-                        audioPlayer.play();
+                        document.querySelectorAll('.song-item').forEach(item => item.classList.remove('active'));
+                        li.classList.add('active');
+                        audioPlayer.src = song.src;
+                        audioPlayer.play().catch(err => console.error('خطا در پخش:', err));
                     });
-
                     songList.appendChild(li);
                 });
             })
             .catch(error => {
-                console.error('Error fetching song list:', error);
+                console.error('خطا در بارگذاری آهنگ‌ها:', error);
+                songList.innerHTML = '<li class="song-item">خطا در بارگذاری آهنگ‌ها.</li>';
             });
     </script>
 </body>
