@@ -1,9 +1,38 @@
-
 [
     {
         "path": "https://dlrapfa.ir/Mp3/2021/05/25/Ho3ein/Ho3ein - 2Ja.mp3",
-        "displayName": "احصین",
+        "displayName": "ho3ein",
         "artist": "2ja",
         "cover": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/Ho3ein_in_2020.jpg/500px-Ho3ein_in_2020.jpg"
+    },
+    {
+        "path": "http://dlrapfa.ir/Admin2/MYRAPFA/Music/Ho3ein%20&%20Epicure%20-%20Didgah%20(MyRapFA.Com).mp3",
+        "displayName": "Didghah",
+        "artist": "Ho3ein & Epicure",
+        "cover": "https://www.myrapfa.com/wp-content/uploads/ho3einepicure-didgah-2019-12-21-20-16-36.jpg"
+    },
+    {
+        "path": "https://dlrapfa.ir/Admin2/MYRAPFA/Music/Ho3ein%20Ft%20Sohrab%20MJ%20-%2012%20Be%20Bad%20(Alireza%20Mokhtary%20Remix)%20(MyRapFa.Com).mp3",
+        "displayName": "12 be bad",
+        "artist": "Ho3ein Ft Sohrab MJ",
+        "cover": "https://www.myrapfa.com/wp-content/uploads/Ho3ein-Ft-Sohrab-MJ-12-Be-Bad-Alireza-Mokhtary-Remix.jpg"
+    },
+    {
+        "path": "http://dlrapfa.ir/Admin2/MYRAPFA/Music/Erfan%20And%20Ho3ein%20-%20Mano%20Natarsoon%20(MyRapFA.Com).mp3",
+        "displayName": "Mano Natarsoon",
+        "artist": "Erfan And Ho3ein",
+        "cover": "https://www.myrapfa.com/wp-content/uploads/151733369669848751erfan-mano-natarsoon-ft-ho3ein.jpg"
+    },
+    {
+        "path": "https://dl.music303.com/music303/single/rap/ho3ein/320/ho3ein-ft-sadegh-rade-pa-music303.com.mp3",
+        "displayName": "Radepa",
+        "artist": "HO3EIN x SADEGH",
+        "cover": "https://ememay.ir/music/wp-content/uploads/2025/02/ab67616d0000b2735157be8974e7b7b7354ce848.jpeg"
+    },
+    {
+        "path": "https://ememay.ir/wp-content/uploads/2024/11/Ho3ein-Shaba.mp3",
+        "displayName": "shaba",
+        "artist": "ho3ein & sadegh",
+        "cover": "https://ememay.ir/music/wp-content/uploads/2025/02/ab67616d0000b2735157be8974e7b7b7354ce848.jpeg"
     }
 ]
