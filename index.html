@@ -307,7 +307,6 @@
             position: fixed;
             width: 100%;
             max-width: 420px;
-            height: 100vh;
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(20px);
             top: 0;
@@ -316,11 +315,20 @@
             padding: 2rem;
             transition: right 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
             overflow-y: auto;
+            max-height: 100vh;
+            min-height: 100vh;
+            box-sizing: border-box;
             border-left: 1px solid rgba(255, 255, 255, 0.3);
         }
         
         .songs-list.showlist {
             right: 0;
+        }
+        
+        #song-items {
+            max-height: calc(100vh - 100px);
+            overflow-y: auto;
+            padding-bottom: 1rem;
         }
         
         .list-close {
@@ -513,7 +521,7 @@
                 <div class="bar"></div>
                 <div class="bar"></div>
                 <div class="bar"></div>
-                <div class="bar"></div>
+                <div class="bar"></*/div>
                 <div class="bar"></div>
             </div>
             
