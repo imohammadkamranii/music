@@ -61,12 +61,29 @@
     },
     
     {
-        "path": "https://dl.avajavan.com/music/000005-Hossein/000-Single-Track/Ho3ein-12-24.mp3",
+        "path": "https://dl.avajavan.com/music/000005-Hossein/000-Single-Track/Sadegh-Ho3ein-Sangin.mp3",
+        "displayName": "Sangin",
+        "artist": "ho3ein",
+        "cover": "https://melusic.ir/wp-content/uploads/sadegh_&%20ho3ein_sangin.jpg"
+    },
+    {
+        "path": "https://dl.avajavan.com/music/000005-Hossein/000-Single-Track/Ho3ein-Sogand-Bordo-Bakht.mp3",
         "displayName": "1224",
         "artist": "ho3ein",
         "cover": "https://noostalgic.ir/wp-content/uploads/2019/02/Hosein-12-24.jpg"
     },
-    
+    {
+        "path": "https://dl.avajavan.com/music/000005-Hossein/000-Single-Track/Ho3ein-12-24.mp3",
+        "displayName": "bord o bakht",
+        "artist": "ho3ein & sadegh & sogand",
+        "cover": "https://sahand-music.ir/photos/2000/15/11769.webp"
+    },
+    {
+        "path": "https://dl.avajavan.com/music/000005-Hossein/000-Single-Track/Ho3ein-Mojan-YZ-Saman-PI-Chalim-2.mp3",
+        "displayName": "chalim2",
+        "artist": "ft ho3ein",
+        "cover": "https://melodyboss.com/wp-content/uploads/2024/04/hs-ho3ein-chalim-ii.jpg"
+    },
     {
         "path": "https://dl.avajavan.com/music/000005-Hossein/000-Single-Track/Ho3ein-12-24.mp3",
         "displayName": "1224",
