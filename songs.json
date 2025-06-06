@@ -6,7 +6,7 @@
         "cover": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/Ho3ein_in_2020.jpg/500px-Ho3ein_in_2020.jpg"
     },
     {
-        "path": "http://dlrapfa.ir/Admin2/MYRAPFA/Music/Ho3ein%20&%20Epicure%20-%20Didgah%20(MyRapFA.Com).mp3",
+        "path": "https://mokhtalefmusic.musitraf.com/music/1398/10/29/Ho3ein-Didgah-%28Ft-Epicure%29.mp3",
         "displayName": "Didghah",
         "artist": "Ho3ein & Epicure",
         "cover": "https://www.myrapfa.com/wp-content/uploads/ho3einepicure-didgah-2019-12-21-20-16-36.jpg"
@@ -58,5 +58,12 @@
         "displayName": "napors",
         "artist": "sadegh",
         "cover": "https://dl.birseda.net/Archive/S/Sadegh/Video/Sadegh%20-%20Napors.jpg"
+    },
+    
+    {
+        "path": "https://sv2.mybia2music.com/s2/Music/1401/11/02/02/Sadegh%20-%20Napors.mp3",
+        "displayName": "1224",
+        "artist": "ho3ein",
+        "cover": "https://noostalgic.ir/wp-content/uploads/2019/02/Hosein-12-24.jpg"
     }
 ]
