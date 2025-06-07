@@ -63,7 +63,7 @@
     {
         "path": "https://dl.avajavan.com/music/000005-Hossein/000-Single-Track/Sadegh-Ho3ein-Sangin.mp3",
         "displayName": "Sangin",
-        "artist": "ho3ein",
+        "artist": "ho3ein & sadegh",
         "cover": "https://melusic.ir/wp-content/uploads/sadegh_&%20ho3ein_sangin.jpg"
     },
     {
@@ -83,6 +83,12 @@
         "displayName": "chalim2",
         "artist": "ft ho3ein",
         "cover": "https://melodyboss.com/wp-content/uploads/2024/04/hs-ho3ein-chalim-ii.jpg"
+    },
+    {
+        "path": "https://dl.musicchi.net/1403/07/07/Ho3ein%20&%20Sadegh%20&%20T-Dey%20-%20Tanhaei.mp3",
+        "displayName": "tanhaei",
+        "artist": "ho3ein & sadegh",
+        "cover": "https://sahand-music.ir/photos/2000/7/29030.webp"
     },
     {
         "path": "https://dl.avajavan.com/music/000005-Hossein/000-Single-Track/Ho3ein-12-24.mp3",
